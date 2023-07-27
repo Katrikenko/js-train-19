@@ -26,6 +26,20 @@ console.log("Завдання: 1 ==============================");
 
 // Викликаємо функцію read об'єкту Book
 
+const Book = {
+  title: "Загальна Книга",
+  author: "Анонім",
+  pages: 0,
+  read() {
+    console.log(`"Ви читаєте "${this.title}" від ${this.author}`);
+  },
+};
+
+const book = Object.create(Book);
+console.log(Object.getPrototypeOf(book));
+console.log(Book.isPrototypeOf(book));
+book.read();
+
 // 2. Наслідування від базового об'єкту Book
 
 /*
@@ -46,6 +60,15 @@ console.log("Завдання: 2 ==============================");
 // Виводимо в консоль Об'єкт: Novel
 
 // Виводимо в консоль прототип Об'єкту: Novel
+
+const Novel = Object.create(Book, {
+  genre: {
+    value: "Новела",
+  },
+});
+
+console.log({ genre: Novel.genre });
+console.log(Object.getPrototypeOf(Novel));
 
 // 3. Створення нового об'єкту та зміна його прототипу
 
@@ -68,6 +91,17 @@ console.log("Завдання: 3 ==============================");
 // Виводимо в консоль Об'єкт: Biography
 
 // Перевіримо чи являється Novel прототипом Biography та виведемо в консоль
+
+const Biography = {
+  title: "Загальна Біографія",
+  author: "Біограф",
+  pages: 200,
+};
+
+Object.setPrototypeOf(Biography, Novel);
+
+console.log(Biography);
+console.log(Novel.isPrototypeOf(Biography));
 
 // 4. Інкапсуляція властивості та додання властивості
 /*
@@ -99,6 +133,26 @@ console.log("Завдання: 4 ==============================");
 
 // Виводимо в консоль налаштування властивости info
 
+let ScienceBook = Object.create(Book);
+
+Object.defineProperty(ScienceBook, "_info", {
+  configurable: false,
+  set(value) {
+    this._info = value;
+  },
+  get() {
+    return `Про книгу ${this.title}: ${this.info}`;
+  },
+});
+
+ScienceBook.title = "Фізика 101";
+ScienceBook.author = "Альберт Ейнштейн";
+ScienceBook.info = "написана в 1915 році";
+
+console.log(ScienceBook._info);
+
+console.log(Object.getOwnPropertyDescriptor(ScienceBook, "_info"));
+
 // 5. Поліморфізм: створення нового об'єкта та перевизначення його методу
 /*
  * Об'єкт: Textbook
@@ -119,6 +173,23 @@ console.log("Завдання: 4 ==============================");
 
 console.log("Завдання: 5 ==============================");
 // Викликаємо функцію read об'єкту Textbook
+
+let Textbook = Object.create(ScienceBook, {
+  title: {
+    value: "Фізика у Вищій Школі",
+  },
+  author: {
+    value: "Дж. Д. Джонс",
+  },
+});
+
+Textbook.read = function () {
+  console.log(
+    `Ви читаєте підручник ${this.title} від ${this.author}. ${this._info}`
+  );
+};
+
+Textbook.read();
 
 // 6. Абстракція: створення об'єкта з загальними властивостями
 /*
@@ -155,3 +226,24 @@ console.log("Завдання: 5 ==============================");
 
 console.log("Завдання: 6 ==============================");
 // Викликаємо функцію play об'єкту Song
+
+let Media = {
+  format: "Загальний Формат",
+  length: 0,
+  play() {
+    console.log(
+      `Зараз відтворюється медіа у форматі ${this.format} з тривалістю ${this.length} секунд`
+    );
+  },
+};
+
+let Song = Object.create(Media, {
+  artist: {
+    value: "Загальний Виконавець",
+  },
+  author: {
+    title: "Загальна Пісня",
+  },
+});
+
+Song.play();
